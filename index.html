@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dutch Vocabulary Flashcards</title>
+    <style>
+        :root {
+            --primary: #ff6b00;
+            --primary-light: #ff9d4d;
+            --secondary: #1e3a8a;
+            --secondary-light: #3b82f6;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .card-container {
+            perspective: 1000px;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .card-front {
+            background-color: white;
+            color: var(--dark);
+        }
+        
+        .card-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .dutch-word {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--secondary);
+            line-height: 1.3;
+        }
+        
+        .pronunciation {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .theme {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--primary-light);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .translation {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        
+        .example {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-top: 20px;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .theme-btn {
+            background-color: white;
+            border: 2px solid var(--secondary-light);
+            color: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .theme-btn.active {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .easy {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .medium {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .hard {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .reset-btn {
+            background-color: #64748b;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .card-container {
+                height: 350px;
+            }
+            
+            .dutch-word {
+                font-size: 1.7rem;
+            }
+            
+            .translation {
+                font-size: 1.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .theme-selector {
+                justify-content: center;
+            }
+            
+            .difficulty-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dutch Vocabulary Flashcards</h1>
+            <p class="subtitle">Flip the card to see the translation - Your progress is automatically saved!</p>
+        </header>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="cards-reviewed">0</div>
+                <div class="stat-label">Reviewed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="cards-mastered">0</div>
+                <div class="stat-label">Mastered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="cards-remaining">0</div>
+                <div class="stat-label">Remaining</div>
+            </div>
+            <div class="stat-item">
+                <button class="reset-btn" id="reset-btn">Reset Progress</button>
+            </div>
+        </div>
+        
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front">
+                    <div class="theme" id="theme-front">Thema 1</div>
+                    <div class="dutch-word" id="dutch-word">woord</div>
+                    <div class="pronunciation" id="pronunciation">/vɔːrt/</div>
+                    <div class="hint">Click to flip</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="theme" id="theme-back">Thema 1</div>
+                    <div class="translation" id="translation">word</div>
+                    <div class="example" id="example">Example: Dit is een moeilijk woord. (This is a difficult word.)</div>
+                    <div class="hint">Click to flip back</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="theme-selector" id="theme-selector">
+                <!-- Theme buttons will be generated here -->
+            </div>
+            
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy" id="easy-btn">Easy</button>
+                <button class="difficulty-btn medium" id="medium-btn">Medium</button>
+                <button class="difficulty-btn hard" id="hard-btn">Hard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dutch vocabulary data structure
+        // You can add more words following this pattern:
+        /*
+        {
+            dutch: "Dutch word",
+            pronunciation: "/phonetic/",
+            english: "English translation",
+            example: "Example sentence (Optional)"
+        }
+        */
+        const vocabularyData = {
+            "Thema 1": [
+                { dutch: "achternaam (de)", pronunciation: "/ˈɑxtərnaːm/", english: "surname" },
+                { dutch: "achternamen", pronunciation: "/ˈɑxtərnaːmə(n)/", english: "surnames" },
+                { dutch: "allemaal", pronunciation: "/ˈɑləmaːl/", english: "all" },
+                { dutch: "alles", pronunciation: "/ˈɑləs/", english: "everything" },
+                { dutch: "antwoord (bijv.)", pronunciation: "/ˈɑntʋoːrt/", english: "answer" },
+                { dutch: "antwoorden", pronunciation: "/ˈɑntʋoːrdə(n)/", english: "answers" },
+                { dutch: "beginnen", pronunciation: "/bəˈɣɪnə(n)/", english: "to begin" },
+                { dutch: "bezoeken", pronunciation: "/bəˈzukə(n)/", english: "to visit" },
+                { dutch: "ben (zijn)", pronunciation: "/bɛn/", english: "am (to be)" },
+                { dutch: "bus (de) bussen", pronunciation: "/bʏs/", english: "bus, buses" },
+                // Add more words here following the same pattern
+                // { dutch: "", pronunciation: "", english: "" },
+            ],
+            "Thema 2": [
+                { dutch: "aanvraagformulier (het), aanvraagformulieren", pronunciation: "/ˈaːn.vraːx.fɔr.myˌlir/", english: "application form, application forms" },
+                { dutch: "adres (het), adressen", pronunciation: "/aːˈdrɛs/", english: "address, addresses" },
+                { dutch: "afhalen", pronunciation: "/ˈɑf.ɦaː.lə(n)/", english: "to pick up" },
+                { dutch: "auto (de), auto's", pronunciation: "/ˈɑu.toː/", english: "car, cars" },
+                { dutch: "begrijp (begrijpen)", pronunciation: "/bəˈɣrɛi̯p/", english: "understand (to understand)" },
+                { dutch: "boek (het), boeken", pronunciation: "/buk/", english: "book, books" },
+                { dutch: "brengen (naar)", pronunciation: "/ˈbrɛ.ŋə(n)/", english: "to bring (to)" },
+                // Add more words here
+            ],
+            "Thema 3": [
+                { dutch: "aardig", pronunciation: "/ˈaːr.dəx/", english: "nice, kind" },
+                { dutch: "af en toe", pronunciation: "/ˈɑf ɛn ˈtu/", english: "occasionally" },
+                { dutch: "avond (de), avonden", pronunciation: "/ˈaː.vɔnt/", english: "evening, evenings" },
+                { dutch: "baan (de), banen", pronunciation: "/baːn/", english: "job, jobs" },
+                // Add more words here
+            ],
+            "Thema 4": [
+                { dutch: "aanbieding (de), aanbiedingen", pronunciation: "/ˈaːn.bi.dɪŋ/", english: "offer, offers" },
+                { dutch: "aankoop (de), aankopen", pronunciation: "/ˈaːn.koːp/", english: "purchase, purchases" },
+                { dutch: "achter", pronunciation: "/ˈɑx.tər/", english: "behind" },
+                // Add more words here
+            ],
+            "Thema 5": [
+                { dutch: "aanraden", pronunciation: "/ˈaːn.raː.də(n)/", english: "to recommend" },
+                { dutch: "bestellen", pronunciation: "/bə.ˈstɛ.lə(n)/", english: "to order" },
+                { dutch: "broodje (het), broodjes", pronunciation: "/ˈbrot.jə/", english: "sandwich, sandwiches" },
+                // Add more words here
+            ],
+            "Thema 6": [
+                { dutch: "aangekomen (aankomen)", pronunciation: "/ˈaːn.ɣə.koː.mə(n)/", english: "arrived (to arrive)" },
+                { dutch: "abonnement (het), abonnementen", pronunciation: "/ˌɑ.bɔ.nə.ˈmɛnt/", english: "subscription, subscriptions" },
+                { dutch: "bagage (de)", pronunciation: "/bɑ.ˈɣaː.ʒə/", english: "luggage" },
+                // Add more words here
+            ],
+            "Thema 7": [
+                { dutch: "aan (aan de muur)", pronunciation: "/aːn/", english: "on (on the wall)" },
+                { dutch: "achter", pronunciation: "/ˈɑx.tər/", english: "behind" },
+                { dutch: "bad (het), baden", pronunciation: "/bɑt/", english: "bath, baths" },
+                // Add more words here
+            ],
+            "Thema 8": [
+                { dutch: "aan de hand (Wat is er aan de hand?)", pronunciation: "/aːn də ɦɑnt/", english: "at hand (What's the matter?)" },
+                { dutch: "ademen", pronunciation: "/ˈaː.də.mə(n)/", english: "to breathe" },
+                { dutch: "advies (het), adviezen", pronunciation: "/ɑt.ˈfis/", english: "advice, advices" },
+                // Add more words here
+            ],
+            "Onregelmatige werkwoorden": [
+                { dutch: "beginnen - begonnen (ben)", pronunciation: "/bə.ˈɣɪ.nə(n) - bə.ˈɣɔ.nə(n)/", english: "to begin - begun (have)" },
+                { dutch: "begrijpen - begrepen (heb)", pronunciation: "/bə.ˈɣrɛi̯.pə(n) - bə.ˈɣreː.pə(n)/", english: "to understand - understood (have)" },
+                { dutch: "blijven - gebleven (ben)", pronunciation: "/ˈblɛi̯.və(n) - ɣə.ˈbleː.və(n)/", english: "to stay - stayed (have)" },
+                // Add more words here
+            ]
+        };
+
+        // App state
+        let currentTheme = "Thema 1";
+        let currentCardIndex = 0;
+        let masteredCards = new Set();
+        let reviewedCards = new Set();
+        let cardQueue = [];
+
+        // DOM elements
+        const cardElement = document.getElementById('card');
+        const dutchWordElement = document.getElementById('dutch-word');
+        const pronunciationElement = document.getElementById('pronunciation');
+        const translationElement = document.getElementById('translation');
+        const exampleElement = document.getElementById('example');
+        const themeFrontElement = document.getElementById('theme-front');
+        const themeBackElement = document.getElementById('theme-back');
+        const themeSelectorElement = document.getElementById('theme-selector');
+        const easyButton = document.getElementById('easy-btn');
+        const mediumButton = document.getElementById('medium-btn');
+        const hardButton = document.getElementById('hard-btn');
+        const cardsReviewedElement = document.getElementById('cards-reviewed');
+        const cardsMasteredElement = document.getElementById('cards-mastered');
+        const cardsRemainingElement = document.getElementById('cards-remaining');
+        const progressElement = document.getElementById('progress');
+        const resetButton = document.getElementById('reset-btn');
+
+// Initialize the app
+function init() {
+    loadProgress();
+    createThemeButtons();
+    loadTheme(currentTheme);
+    updateStats();
+    
+    // Add event listeners
+    cardElement.addEventListener('click', flipCard);
+    easyButton.addEventListener('click', () => rateCard('easy'));
+    mediumButton.addEventListener('click', () => rateCard('medium'));
+    hardButton.addEventListener('click', () => rateCard('hard'));
+    resetButton.addEventListener('click', resetProgress);
+    
+    // Save progress when leaving the page
+    window.addEventListener('beforeunload', saveProgress);
+    
+    // 🆕 MOBILE ENHANCEMENTS:
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) saveProgress();
+    });
+    testStorage(); // Check if storage works
+}
+
+// 🆕 ADD THIS NEW FUNCTION:
+function testStorage() {
+    try {
+        localStorage.setItem('storage_test', 'working');
+        const result = localStorage.getItem('storage_test');
+        console.log('Storage test:', result === 'working' ? 'PASSED' : 'FAILED');
+    } catch (e) {
+        console.log('Storage test FAILED:', e);
+    }
+}
+
+// Load progress from localStorage
+function loadProgress() {
+    try {
+        const savedProgress = localStorage.getItem('dutchFlashcardsProgress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            masteredCards = new Set(progress.masteredCards || []);
+            reviewedCards = new Set(progress.reviewedCards || []);
+            currentTheme = progress.currentTheme || "Thema 1";
+            console.log('Progress loaded from localStorage');
+        }
+    } catch (e) {
+        console.error('Error loading progress:', e);
+    }
+}
+
+// Save progress to localStorage
+function saveProgress() {
+    try {
+        const progress = {
+            masteredCards: Array.from(masteredCards),
+            reviewedCards: Array.from(reviewedCards),
+            currentTheme: currentTheme,
+            timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('dutchFlashcardsProgress', JSON.stringify(progress));
+        console.log('Progress saved to localStorage');
+    } catch (e) {
+        console.error('Error saving progress:', e);
+    }
+}
+
+// Reset all progress
+function resetProgress() {
+    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+        masteredCards.clear();
+        reviewedCards.clear();
+        localStorage.removeItem('dutchFlashcardsProgress');
+        loadTheme(currentTheme);
+        updateStats();
+        console.log('Progress reset');
+    }
+}
+
+// 🆕 MODIFY YOUR rateCard FUNCTION (add this line at the end):
+function rateCard(difficulty) {
+    // ... your existing rating logic ...
+    
+    // Add this line at the end of your function:
+    saveProgress(); // Save immediately after each rating
+}
+
+        // Create theme selection buttons
+        function createThemeButtons() {
+            themeSelectorElement.innerHTML = '';
+            for (const theme in vocabularyData) {
+                const button = document.createElement('button');
+                button.className = `theme-btn ${theme === currentTheme ? 'active' : ''}`;
+                button.textContent = theme;
+                button.addEventListener('click', () => {
+                    currentTheme = theme;
+                    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    loadTheme(theme);
+                    saveProgress();
+                });
+                themeSelectorElement.appendChild(button);
+            }
+        }
+
+        // Load cards for a specific theme
+        function loadTheme(theme) {
+            currentCardIndex = 0;
+            cardQueue = [...vocabularyData[theme]];
+            
+            // Filter out mastered cards from the current queue
+            cardQueue = cardQueue.filter(card => !masteredCards.has(card.dutch));
+            
+            shuffleArray(cardQueue);
+            showCard();
+        }
+
+        // Show current card
+        function showCard() {
+            if (cardQueue.length === 0) {
+                // All cards reviewed
+                dutchWordElement.textContent = "All Done!";
+                pronunciationElement.textContent = "";
+                translationElement.textContent = "You've reviewed all cards in this theme";
+                exampleElement.textContent = "Select another theme or reset progress";
+                themeFrontElement.textContent = currentTheme;
+                themeBackElement.textContent = currentTheme;
+                return;
+            }
+            
+            const card = cardQueue[currentCardIndex];
+            dutchWordElement.textContent = card.dutch;
+            pronunciationElement.textContent = card.pronunciation;
+            translationElement.textContent = card.english;
+            exampleElement.textContent = card.example || "";
+            themeFrontElement.textContent = currentTheme;
+            themeBackElement.textContent = currentTheme;
+            
+            // Reset card to front
+            cardElement.classList.remove('flipped');
+        }
+
+        // Flip the card
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // Rate the current card (spaced repetition)
+        function rateCard(difficulty) {
+            if (cardQueue.length === 0) return;
+            
+            const card = cardQueue[currentCardIndex];
+            reviewedCards.add(card.dutch);
+            
+            // Simple spaced repetition logic
+            if (difficulty === 'easy') {
+                masteredCards.add(card.dutch);
+                // Remove from queue if mastered
+                cardQueue.splice(currentCardIndex, 1);
+            } else if (difficulty === 'medium') {
+                // Keep in queue but move to later position
+                if (currentCardIndex < cardQueue.length - 1) {
+                    const temp = cardQueue[currentCardIndex];
+                    cardQueue[currentCardIndex] = cardQueue[currentCardIndex + 1];
+                    cardQueue[currentCardIndex + 1] = temp;
+                }
+            } else { // hard
+                // Move to later in the queue (more repetitions needed)
+                const randomIndex = Math.min(currentCardIndex + 2 + Math.floor(Math.random() * 3), cardQueue.length - 1);
+                cardQueue.splice(currentCardIndex, 1);
+                cardQueue.splice(randomIndex, 0, card);
+            }
+            
+            // Move to next card
+            if (currentCardIndex >= cardQueue.length) {
+                currentCardIndex = 0;
+            }
+            
+            showCard();
+            updateStats();
+            saveProgress(); // Save after each rating
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalCards = Object.values(vocabularyData).flat().length;
+            const reviewedCount = reviewedCards.size;
+            const masteredCount = masteredCards.size;
+            const remainingCount = totalCards - masteredCount;
+            
+            cardsReviewedElement.textContent = reviewedCount;
+            cardsMasteredElement.textContent = masteredCount;
+            cardsRemainingElement.textContent = remainingCount;
+            
+            // Update progress bar
+            const progressPercentage = (masteredCount / totalCards) * 100;
+            progressElement.style.width = `${progressPercentage}%`;
+        }
+
+        // Utility function to shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
