@@ -280,121 +280,138 @@
                 justify-content: center;
             }
         }
-        /* 🆕 BETTER MOBILE LAYOUT */
+        /* 🆕 COMPLETE MOBILE RESTRUCTURING */
         /* Mobile Adjustments */
         @media (max-width: 768px) {
-            .container {
+            body {
+                margin: 0;
                 padding: 5px;
-                max-width: 100%;
-                min-height: 100vh;
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .container {
+                padding: 0;
+                height: 100vh;
                 display: flex;
                 flex-direction: column;
+                justify-content: space-between;
             }
             
             header {
                 padding: 5px 0;
+                flex-shrink: 0;
             }
             
             h1 {
-                font-size: 1.3em;
-                margin: 5px 0;
+                font-size: 1.2em;
+                margin: 2px 0;
             }
             
             .subtitle {
-                font-size: 0.8em;
-                margin: 0 0 10px 0;
+                font-size: 0.7em;
+                margin: 0 0 5px 0;
             }
             
             .stats {
-                margin: 5px auto;
-                gap: 5px;
-                flex-wrap: wrap;
+                margin: 2px auto;
+                gap: 3px;
+                flex-shrink: 0;
             }
             
             .stat-item {
-                padding: 4px;
-                min-width: 60px;
+                padding: 2px 4px;
+                min-width: 50px;
             }
             
             .stat-value {
-                font-size: 1em;
+                font-size: 0.8em;
             }
             
             .stat-label {
-                font-size: 0.6em;
+                font-size: 0.55em;
             }
             
+            .progress-bar {
+                margin: 3px 0;
+                flex-shrink: 0;
+                height: 6px;
+            }
+            
+            /* CARD SECTION - FIXED HEIGHT */
             .card-container {
                 flex: 1;
+                min-height: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 200px;
-                margin: 5px 0;
+                margin: 2px 0;
             }
             
             .card {
-                width: 260px;
-                height: 150px;
-                margin: 0 auto;
+                width: 240px;
+                height: 130px;
             }
             
             .card-front, .card-back {
-                padding: 12px;
+                padding: 8px;
             }
             
             .dutch-word {
-                font-size: 1.6em;
-                margin: 5px 0;
+                font-size: 1.4em;
+                margin: 2px 0;
             }
             
             .translation {
-                font-size: 1.4em;
-                margin: 5px 0;
+                font-size: 1.2em;
+                margin: 2px 0;
             }
             
             .pronunciation, .example {
-                font-size: 0.8em;
+                font-size: 0.65em;
+                margin: 1px 0;
             }
             
             .theme {
-                font-size: 0.7em;
+                font-size: 0.6em;
             }
             
             .hint {
-                font-size: 0.7em;
+                font-size: 0.6em;
             }
             
+            /* CONTROLS SECTION - FIXED AT BOTTOM */
             .controls {
-                margin: 5px 0;
+                margin: 0;
+                padding: 5px 0;
+                flex-shrink: 0;
             }
             
             .theme-selector {
-                margin: 5px 0;
+                margin: 2px 0;
             }
             
             .theme-btn {
-                padding: 6px 10px;
-                font-size: 0.8em;
-                margin: 2px;
+                padding: 3px 6px;
+                font-size: 0.65em;
+                margin: 1px;
             }
             
             .difficulty-buttons {
-                margin: 5px 0;
+                margin: 3px 0;
             }
             
-            button {
-                padding: 8px 12px;
-                font-size: 0.9em;
-                margin: 2px;
+            .difficulty-btn {
+                padding: 5px 8px;
+                font-size: 0.75em;
+                margin: 1px;
             }
             
             .reset-btn {
-                padding: 6px 10px;
-                font-size: 0.8em;
+                padding: 3px 6px;
+                font-size: 0.65em;
             }
-        }
-        
+        }        
     </style>
 </head>
 <body>
