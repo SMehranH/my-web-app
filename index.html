@@ -280,77 +280,118 @@
                 justify-content: center;
             }
         }
-        /* 🆕 BETTER MOBILE FIX */
+        /* 🆕 BETTER MOBILE LAYOUT */
         /* Mobile Adjustments */
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 5px;
                 max-width: 100%;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
             }
             
-            .card {
-                width: 280px;
-                height: 160px;
-                margin: 15px auto;
-            }
-            
-            .card-front, .card-back {
-                padding: 15px;
-            }
-            
-            .dutch-word {
-                font-size: 1.8em;
-                margin: 8px 0;
-            }
-            
-            .translation {
-                font-size: 1.6em;
-                margin: 8px 0;
-            }
-            
-            .pronunciation, .example {
-                font-size: 0.9em;
-            }
-            
-            .theme {
-                font-size: 0.8em;
-            }
-            
-            .hint {
-                font-size: 0.8em;
+            header {
+                padding: 5px 0;
             }
             
             h1 {
-                font-size: 1.5em;
-                margin: 10px 0;
+                font-size: 1.3em;
+                margin: 5px 0;
             }
             
             .subtitle {
-                font-size: 0.9em;
-                margin: 5px 0 15px 0;
+                font-size: 0.8em;
+                margin: 0 0 10px 0;
             }
             
             .stats {
-                margin: 10px auto;
-                gap: 8px;
+                margin: 5px auto;
+                gap: 5px;
+                flex-wrap: wrap;
             }
             
             .stat-item {
-                padding: 6px;
+                padding: 4px;
+                min-width: 60px;
             }
             
             .stat-value {
-                font-size: 1.1em;
+                font-size: 1em;
             }
             
             .stat-label {
+                font-size: 0.6em;
+            }
+            
+            .card-container {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 200px;
+                margin: 5px 0;
+            }
+            
+            .card {
+                width: 260px;
+                height: 150px;
+                margin: 0 auto;
+            }
+            
+            .card-front, .card-back {
+                padding: 12px;
+            }
+            
+            .dutch-word {
+                font-size: 1.6em;
+                margin: 5px 0;
+            }
+            
+            .translation {
+                font-size: 1.4em;
+                margin: 5px 0;
+            }
+            
+            .pronunciation, .example {
+                font-size: 0.8em;
+            }
+            
+            .theme {
                 font-size: 0.7em;
+            }
+            
+            .hint {
+                font-size: 0.7em;
+            }
+            
+            .controls {
+                margin: 5px 0;
+            }
+            
+            .theme-selector {
+                margin: 5px 0;
+            }
+            
+            .theme-btn {
+                padding: 6px 10px;
+                font-size: 0.8em;
+                margin: 2px;
+            }
+            
+            .difficulty-buttons {
+                margin: 5px 0;
             }
             
             button {
                 padding: 8px 12px;
                 font-size: 0.9em;
-                margin: 3px;
+                margin: 2px;
+            }
+            
+            .reset-btn {
+                padding: 6px 10px;
+                font-size: 0.8em;
             }
         }
         
