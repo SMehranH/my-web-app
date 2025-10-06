@@ -281,6 +281,21 @@
             }
         }
     </style>
+    /* Mobile Scaling */
+@media (max-width: 768px) {
+    body {
+        transform: scale(0.85);
+        transform-origin: top center;
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+    
+    .container {
+        max-width: 100%;
+        overflow: hidden;
+    }
+}
 </head>
 <body>
     <div class="container">
