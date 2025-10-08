@@ -2095,22 +2095,21 @@ function rateCard(difficulty) {
             updateStats();
             saveProgress();
         }
-        // 🆕 GET NEXT DUE CARD FOR SPACED REPETITION
+        // 🆕 GET NEXT DUE CARD FOR SPACED REPETITION - FIXED THEME BUG
         function getNextDueCard() {
             const now = Date.now();
             
-            // Get all cards that are due for review
+            // Get all cards that are due for review IN CURRENT THEME
             dueCards = [];
             
-            for (const theme in vocabularyData) {
-                for (const card of vocabularyData[theme]) {
-                    const cardKey = `${theme}-${card.dutch}`;
-                    const schedule = cardScheduling[cardKey];
-                    
-                    // If no schedule exists or card is due for review
-                    if (!schedule || schedule.nextReview <= now) {
-                        dueCards.push({ theme, card });
-                    }
+            // Only look at cards in the CURRENT selected theme
+            for (const card of vocabularyData[currentTheme]) {
+                const cardKey = `${currentTheme}-${card.dutch}`;
+                const schedule = cardScheduling[cardKey];
+                
+                // If no schedule exists or card is due for review
+                if (!schedule || schedule.nextReview <= now) {
+                    dueCards.push(card);
                 }
             }
             
@@ -2118,29 +2117,20 @@ function rateCard(difficulty) {
             shuffleArray(dueCards);
             
             if (dueCards.length > 0) {
-                // Show first due card
-                const nextCard = dueCards[0];
-                currentTheme = nextCard.theme;
+                // Show first due card from current theme
                 currentCardIndex = 0;
-                cardQueue = [nextCard.card];
-                
-                // Update theme buttons
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.textContent === currentTheme);
-                });
-                
+                cardQueue = [dueCards[0]];
                 showCard();
             } else {
-                // No due cards - show completion message
-                dutchWordElement.textContent = "All Caught Up!";
+                // No due cards in current theme - show completion message
+                dutchWordElement.textContent = "Theme Complete!";
                 pronunciationElement.textContent = "";
-                translationElement.textContent = "No cards due for review right now";
-                exampleElement.textContent = "Come back later for more reviews";
-                themeFrontElement.textContent = "Review Complete";
-                themeBackElement.textContent = "Review Complete";
+                translationElement.textContent = "No cards due for review in this theme";
+                exampleElement.textContent = "Select another theme or come back later";
+                themeFrontElement.textContent = currentTheme;
+                themeBackElement.textContent = currentTheme;
             }
         }
-
         // Update statistics
         function updateStats() {
             const totalCards = Object.values(vocabularyData).flat().length;
