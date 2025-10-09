@@ -2081,8 +2081,10 @@ function rateCard(difficulty) {
             if (schedule.easiness < 1.3) schedule.easiness = 1.3;
             
             // Calculate next review date (in milliseconds)
-            const daysToMs = schedule.interval * 24 * 60 * 60 * 1000;
-            schedule.nextReview = Date.now() + daysToMs;
+            const nextReviewDate = new Date();
+            nextReviewDate.setDate(nextReviewDate.getDate() + schedule.interval);
+            nextReviewDate.setHours(0, 0, 0, 0); // Set to start of day
+            schedule.nextReview = nextReviewDate.getTime();
             
             // Track reviewed cards
             reviewedCards.add(card.dutch);
